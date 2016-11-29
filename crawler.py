@@ -1,3 +1,4 @@
+import sys
 import tweepy
 import json
 import pymongo
@@ -6,20 +7,28 @@ from pymongo import MongoClient
 
 print "Start"
 
+name_to_search = sys.argv[1]
+
 #starts mongoDB
 client = MongoClient()
-db = client.tweepy_database
-collection = db.tweepy_collection
+db = client[name_to_search + 'tweepy_database']
+collection = db[name_to_search + 'tweepy_collections']
 
 #Classe do tweepy responsavel por armazenar os Twittes no mongoDB
 class MyStreamListener(tweepy.StreamListener):
     def on_status(self, status):
-        if (status.coordinates != None):
+        if (status.coordinates):
             what = collection.insert_one(status._json)
             print status.text
             print status.coordinates
             print status.created_at
-            print "\n"
+            print "/***************************************************/"
+            variable = 0
+            for post in collection.find():
+                print post
+                print variable
+                variable = variable+1
+
 
 consumer_key = 'x0GzRIsgrn6PiuxmON0qEEVBU'
 consumer_secret = 'GApQR5aIeVCXxdV3ZLTdeiA6OGG6UQleHZnD8E2LBCJcdRAKZh'
@@ -34,5 +43,5 @@ api = tweepy.API(auth)
 myStreamListener = MyStreamListener()
 myStream = tweepy.Stream(auth = api.auth, listener = myStreamListener)
 
-myStream.filter(track=['hotel'])
+myStream.filter(track=[name_to_search])
 #myStream.filter(track=['python'], async=True)
