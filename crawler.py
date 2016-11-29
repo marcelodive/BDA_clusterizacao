@@ -1,9 +1,21 @@
 import tweepy
 import json
+import pymongo
+import datetime
+from pymongo import MongoClient
 
+print "Start"
+
+#starts mongoDB
+client = MongoClient()
+db = client.tweepy_database
+collection = db.tweepy_collection
+
+#Classe do tweepy responsavel por armazenar os Twittes no mongoDB
 class MyStreamListener(tweepy.StreamListener):
     def on_status(self, status):
         if (status.coordinates != None):
+            what = collection.insert_one(status._json)
             print status.text
             print status.coordinates
             print status.created_at
