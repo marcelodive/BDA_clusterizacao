@@ -5,30 +5,38 @@ import pymongo
 import datetime
 from pymongo import MongoClient
 
-print "Start"
 
+"""/***********************************************************************/"""
+
+print "\n Starting... \n"
 name_to_search = sys.argv[1]
 
-#starts mongoDB
+"""/***********************************************************************/"""
+
+#inicia MongoDB e cria-se os bancos necessarios
 client = MongoClient()
-db = client[name_to_search + 'tweepy_database']
+db = client['tweepy_database']
 collection = db[name_to_search + 'tweepy_collections']
+
+"""/***********************************************************************/"""
 
 #Classe do tweepy responsavel por armazenar os Twittes no mongoDB
 class MyStreamListener(tweepy.StreamListener):
     def on_status(self, status):
         if (status.coordinates):
-            what = collection.insert_one(status._json)
-            print status.text
-            print status.coordinates
-            print status.created_at
-            print "/***************************************************/"
+            collection.insert_one(status._json)
+            #jsonVar = "{text: \"" + status.text.encode('utf-8') + "\", coordinates: " + str(status.coordinates)+ ", created_at: \"" + str(status.created_at) + "\", word: \"" + str(name_to_search) + "\"}"
+            #print jsonVar
+            #jsonDump = json.dumps(jsonVar)
+            #jsonLoad = json.loads(jsonDump)
+            #collection.insert_one(jsonLoad)
             variable = 0
             for post in collection.find():
                 print post
                 print variable
                 variable = variable+1
 
+"""/***********************************************************************/"""
 
 consumer_key = 'x0GzRIsgrn6PiuxmON0qEEVBU'
 consumer_secret = 'GApQR5aIeVCXxdV3ZLTdeiA6OGG6UQleHZnD8E2LBCJcdRAKZh'
@@ -40,8 +48,12 @@ auth.set_access_token(access_token, access_secret)
 
 api = tweepy.API(auth)
 
+"""/***********************************************************************/"""
+
 myStreamListener = MyStreamListener()
 myStream = tweepy.Stream(auth = api.auth, listener = myStreamListener)
 
 myStream.filter(track=[name_to_search])
-#myStream.filter(track=['python'], async=True)
+#myStream.filter(track=[name_to_search], async=True)
+
+"""/***********************************************************************/"""
