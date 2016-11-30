@@ -16,7 +16,7 @@ name_to_search = sys.argv[1]
 #inicia MongoDB e cria-se os bancos necessarios
 client = MongoClient()
 db = client['tweepy_database']
-collection = db[name_to_search + 'tweepy_collections']
+collection = db[name_to_search + '_tweepy_collections']
 
 """/***********************************************************************/"""
 
@@ -57,3 +57,6 @@ myStream.filter(track=[name_to_search])
 #myStream.filter(track=[name_to_search], async=True)
 
 """/***********************************************************************/"""
+#Referências:
+#https://marcobonzanini.com/2015/03/02/mining-twitter-data-with-python-part-1/
+#http://adilmoujahid.com/posts/2015/01/interactive-data-visualization-d3-dc-python-mongodb/
