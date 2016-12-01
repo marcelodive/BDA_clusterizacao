@@ -30,7 +30,8 @@ class MyStreamListener(tweepy.StreamListener):
             #jsonDump = json.dumps(jsonVar)
             #jsonLoad = json.loads(jsonDump)
             #collection.insert_one(jsonLoad)
-            file = open(name_to_search + "_tweepy_collections.txt", "a")
+            #file = open(name_to_search + "_tweepy_collections.txt", "a")
+            file = open("tweepy_collections.txt", "a")
             file.write(status.text.encode('utf-8') + " |_| " + str(status.coordinates))
             file.write("\n")
             variable = 0
