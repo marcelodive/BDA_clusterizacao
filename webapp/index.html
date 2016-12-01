@@ -52,13 +52,35 @@
         data: { name: "hotel"}
       })
         .done(function( msg ) {
-          console.log(msg);
+          //console.log(msg);
+          insertGeoJson(msg);
         });
     }
   </script>
 
   <script>
-    setInterval(runFunction,10000);
+    var markersMap = L.layerGroup().addTo(mymap);
+    function insertGeoJson(geoJson){
+      mymap.removeLayer(markersMap);
+      markersMap = L.layerGroup().addTo(mymap);
+      var jsonParsed = JSON.parse(geoJson);
+      var iterator = 0;
+      while (jsonParsed.geometries[iterator]) {
+        var tempJson = jsonParsed.geometries[iterator];
+        console.log(tempJson.text);
+        var markerLoop = L.marker([tempJson.coordinates[1], tempJson.coordinates[0]]).bindPopup(tempJson.text);
+        //markerLoop.addTo(mymap);
+        markerLoop.addTo(markersMap);
+        iterator++;
+      }
+      markersMap.addTo(mymap);
+    }
+
+  </script>
+
+  <script>
+    mymap.setView([0, 0], 3)
+    setInterval(runFunction,3000);
   </script>
 </body>
 </html>
