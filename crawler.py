@@ -30,11 +30,15 @@ class MyStreamListener(tweepy.StreamListener):
             #jsonDump = json.dumps(jsonVar)
             #jsonLoad = json.loads(jsonDump)
             #collection.insert_one(jsonLoad)
+            file = open(name_to_search + "_tweepy_collections.txt", "a")
+            file.write(status.text.encode('utf-8') + " |_| " + str(status.coordinates))
+            file.write("\n")
             variable = 0
             for post in collection.find():
                 print post
                 print variable
                 variable = variable+1
+
 
 """/***********************************************************************/"""
 
@@ -57,6 +61,7 @@ myStream.filter(track=[name_to_search])
 #myStream.filter(track=[name_to_search], async=True)
 
 """/***********************************************************************/"""
-#Referências:
+
+#Referencias:
 #https://marcobonzanini.com/2015/03/02/mining-twitter-data-with-python-part-1/
 #http://adilmoujahid.com/posts/2015/01/interactive-data-visualization-d3-dc-python-mongodb/
