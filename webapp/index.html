@@ -16,6 +16,8 @@
 
   <!-- Leaflet.js -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://rawgit.com/Leaflet/Leaflet.markercluster/master/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://rawgit.com/Leaflet/Leaflet.markercluster/master/dist/MarkerCluster.Default.css" />
 </head>
 <body>
   <!--[if lt IE 8]>
@@ -41,7 +43,9 @@
     ga('create','UA-XXXXX-X','auto');ga('send','pageview');
   </script>
   <script src="js/bouncemarker.js"></script>
-
+  <script src="https://rawgit.com/Leaflet/Leaflet.markercluster/master/src/MarkerCluster.js"></script>
+  <script src="https://rawgit.com/Leaflet/Leaflet.markercluster/master/src/MarkerClusterGroup.js"></script>
+  <script src="https://rawgit.com/Leaflet/Leaflet.markercluster/master/src/DistanceGrid.js"></script>
   <!--Ajax call to php -->
   <script>
     function runFunction(){
@@ -60,28 +64,30 @@
   </script>
 
   <script>
-    var markersMap = L.layerGroup().addTo(mymap);
-    function insertGeoJson(geoJson){
-      //console.log(geoJson);
-      var height = $(window).height(); $('#mapid').css("height",height);
-
-      mymap.removeLayer(markersMap);
-      markersMap = L.layerGroup().addTo(mymap);
-      var jsonParsed = JSON.parse(geoJson);
-      var iterator = 0;
-      while (jsonParsed.geometries[iterator]) {
-        var tempJson = jsonParsed.geometries[iterator];
-        var markerLoop = L.marker([tempJson.coordinates[1], tempJson.coordinates[0]]).bindPopup(tempJson.text);
-        markerLoop.addTo(markersMap);
-        iterator++;
+      var markersMap = L.layerGroup().addTo(mymap);
+      var markersCluster = L.markerClusterGroup();
+      function insertGeoJson(geoJson){        
+        markersCluster.clearLayers();
+        //console.log(geoJson);
+        var height = $(window).height(); $('#mapid').css("height",height);
+        //mymap.removeLayer(markersCluster);
+        //markersMap = L.layerGroup().addTo(mymap);
+        var jsonParsed = JSON.parse(geoJson);
+        var iterator = 0;
+        while (jsonParsed.geometries[iterator]) {
+          var tempJson = jsonParsed.geometries[iterator];
+          var markerLoop = L.marker([tempJson.coordinates[1], tempJson.coordinates[0]]).bindPopup(tempJson.text);
+          //markerLoop.addTo(markersMap);
+          markersCluster.addLayer(markerLoop);
+          iterator++;
+        }
+        mymap.addLayer(markersCluster);
       }
-      markersMap.addTo(mymap);
-    }
 
   </script>
 
   <script>
-    mymap.setView([0, 0], 3)
+    mymap.setView([10, 0], 3)
     setInterval(runFunction,3000);
   </script>
 </body>
